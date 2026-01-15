@@ -1,0 +1,69 @@
+{
+  "isInternship": true,
+  "summary": "DevOps Engineer and Bachelor of Computer Science student at Dalhousie University with a focus on building reliable systems at the intersection of automation, infrastructure, and deployment. Experienced in full-stack development, API integration, and creating custom solutions for real estate and management workflows.",
+  "skills": [
+    {
+      "label": "Languages",
+      "value": "TypeScript, JavaScript, Java, PHP, Python, SQL, HTML/CSS, Liquid"
+    },
+    {
+      "label": "Frameworks & Libraries",
+      "value": "Next.js, React.js, Express.js, Prisma ORM, Kysely"
+    },
+    {
+      "label": "Tools & Platforms",
+      "value": "Bun, WordPress, PostgreSQL, Docker, Linux, Git, REST APIs, Google Sheets API, Google Drive API, Google Maps API, GatewayAPI, Active Directory, Zoho API"
+    }
+  ],
+  "experience": [
+    {
+      "role": "Full-Stack Developer",
+      "bullets": [
+        "Built internal email template management tool using Express.js with custom React.js interface",
+        "Integrated Zoho API to autofill employee personal information for email templates"
+      ]
+    },
+    {
+      "role": "DevOps/Full-Stack Developer",
+      "bullets": [
+        "Built Flash SMS notification system with Next.js and TypeScript, integrated with GatewayAPI and PostgreSQL",
+        "Deployed self-hosted production server using Docker containers on a Linux VM",
+        "Integrated Windows Active Directory for school-wide authentication"
+      ]
+    },
+    {
+      "role": "Frontend/WordPress/Shopify Developer",
+      "bullets": [
+        "Integrated PHP and JavaScript with WordPress Advanced Custom Fields for Sitings.ca",
+        "Contributed to Shopify theme development using Liquid",
+        "Worked on Beautifi web app using React.js with PostgreSQL and Kysely query builder"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "projectId": "yda-crm",
+      "bullets": [
+        "Developing a comprehensive customer management and go-kart booking system to automate business operations",
+        "Utilizing TypeScript, Next.js, and Prisma to create a scalable full-stack architecture",
+        "Implementing features for customer data handling, session scheduling, and resource allocation"
+      ]
+    },
+    {
+      "projectId": "etpzp-sms",
+      "bullets": [
+        "Developed a flash SMS sending system for staff at ETPZP high school to streamline internal communication",
+        "Architected a robust backend using Next.js, TypeScript, and PostgreSQL to handle message queuing and delivery",
+        "Deployed the solution on a self-hosted Linux server utilizing Docker for containerized environment management"
+      ]
+    },
+    {
+      "projectId": "sitings",
+      "bullets": [
+        "Built a real estate location analysis and site selection tool to assist in property assessment",
+        "Integrated PHP and JavaScript with WordPress Advanced Custom Fields (ACF) to deliver dynamic data visualization",
+        "Optimized the platform for performance, enabling efficient filtering and display of real estate data"
+      ]
+    }
+  ]
+}
