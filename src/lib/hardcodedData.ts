@@ -38,7 +38,7 @@ export const HARDCODED_DATA = {
       title: "CRM for Young Drivers Academy",
       subtitle: "Customer Management & Go-Kart Booking System",
       dates: "2025",
-      link: "https://luigigirke.com/project/yda-app",
+      // link: "https://luigigirke.com/project/yda-app", // For now I don't have sufficient documentation about this project on my website, so I don't want the employer to look at this
     },
     "etpzp-sms": {
       title: "ETPZP SMS System",
