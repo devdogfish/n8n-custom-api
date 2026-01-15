@@ -207,22 +207,28 @@ export async function generateResumePDFBuffer(
       const titleWidth = doc.widthOfString(project.title);
       doc.text(project.title, { continued: true });
 
-      // Add space for the icon (reduced by 1 pixel to bring comma closer)
-      const spaceWidth = projectIconSize + projectIconPadding * 2 - 1;
-      doc.text(" ".repeat(Math.ceil(spaceWidth / doc.widthOfString(" "))), { continued: true });
+      // Only add space for icon if link exists
+      if (project.link) {
+        // Add space for the icon (reduced by 1 pixel to bring comma closer)
+        const spaceWidth = projectIconSize + projectIconPadding * 2 - 1;
+        doc.text(" ".repeat(Math.ceil(spaceWidth / doc.widthOfString(" "))), { continued: true });
+      }
 
       // Draw comma and subtitle (italic), dates (regular)
       doc.font(fontItalic).text(`, ${project.subtitle}`, { continued: true });
       doc.font(fontRegular).text(project.dates, { align: "right" });
 
-      // Draw external link icon after title (overlaid on top of the space)
-      const iconX = titleStartX + titleWidth + projectIconPadding;
-      const iconY = titleStartY + 3; // Vertically center with text
-      drawExternalLinkIcon(doc, iconX, iconY, projectIconSize);
+      // Only draw icon and link if link exists
+      if (project.link) {
+        // Draw external link icon after title (overlaid on top of the space)
+        const iconX = titleStartX + titleWidth + projectIconPadding;
+        const iconY = titleStartY + 3; // Vertically center with text
+        drawExternalLinkIcon(doc, iconX, iconY, projectIconSize);
 
-      // Add clickable link overlay on the title (including the icon)
-      const url = project.link.startsWith("http") ? project.link : `https://${project.link}`;
-      doc.link(titleStartX, titleStartY, titleWidth + projectIconPadding + projectIconSize, 12, url);
+        // Add clickable link overlay on the title (including the icon)
+        const url = project.link.startsWith("http") ? project.link : `https://${project.link}`;
+        doc.link(titleStartX, titleStartY, titleWidth + projectIconPadding + projectIconSize, 12, url);
+      }
 
       renderBullets(doc, project.bullets, fontRegular);
       doc.moveDown();

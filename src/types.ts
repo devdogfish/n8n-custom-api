@@ -19,7 +19,7 @@ export interface Resume {
     title: string; // Hardcoded, will be bold
     subtitle: string; // Hardcoded, will be italic
     dates: string; // Hardcoded, will be bold
-    link: string; // Hardcoded
+    link: string | null; // Hardcoded, optional
     bullets: string[]; // AI-generated
   }>;
   education: {
@@ -155,9 +155,9 @@ export function validateResumeData(data: any): ValidationResult {
           `Invalid projects[${index}].dates (must be a non-empty string)`
         );
       }
-      if (typeof proj.link !== "string" || proj.link.trim() === "") {
+      if (proj.link !== null && (typeof proj.link !== "string" || proj.link.trim() === "")) {
         errors.push(
-          `Invalid projects[${index}].link (must be a non-empty string)`
+          `Invalid projects[${index}].link (must be a non-empty string or null)`
         );
       }
       if (!Array.isArray(proj.bullets)) {
