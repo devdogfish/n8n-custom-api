@@ -3,6 +3,7 @@
   "type": "module",
   "scripts": {
     "generate-types": "tsx scripts/generateTypes.ts",
+    "validate-input": "tsx scripts/validateInput.ts",
     "vercel-build": "npm run generate-types"
   },
   "dependencies": {

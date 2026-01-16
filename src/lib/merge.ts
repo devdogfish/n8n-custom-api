@@ -1,33 +1,34 @@
 import type { Resume } from "../types.js";
 import { HARDCODED_DATA } from "./hardcodedData.js";
-import { ResumeInput } from "../generated/ResumeInput.js";
+import { ResumeInputType } from "../generated/ResumeInputType.js";
 
 /**
  * Merges hardcoded data with AI-generated input to create a complete Resume.
- * Experience merged by index - AI input must match hardcoded array length.
+ * Experience merged by ID - AI controls ordering and selection.
  * Projects merged by ID - AI controls ordering and selection.
  */
-export function mergeResumeData(input: ResumeInput): Resume {
-  // Validate experience array length matches
-  if (input.experience.length !== HARDCODED_DATA.experience.length) {
-    throw new Error(
-      `Experience array length mismatch. Expected ${HARDCODED_DATA.experience.length}, got ${input.experience.length}`
-    );
-  }
+export function mergeResumeData(input: ResumeInputType): Resume {
+  // Merge experience by ID - AI controls order via array position
+  const experience: Resume["experience"] = input.experience.map((aiExp) => {
+    const hardcoded = HARDCODED_DATA.experience[aiExp.experienceId];
 
-  // Merge experience by index (unchanged)
-  const experience: Resume["experience"] = input.experience.map(
-    (aiExp, index) => {
-      const hardcoded = HARDCODED_DATA.experience[index]!;
-      return {
-        role: aiExp.role,
-        institution: hardcoded.institution,
-        location: hardcoded.location,
-        dates: hardcoded.dates,
-        bullets: aiExp.bullets,
-      };
+    if (!hardcoded) {
+      throw new Error(
+        `Unknown experience ID: "${
+          aiExp.experienceId
+        }". Valid IDs: ${Object.keys(HARDCODED_DATA.experience).join(", ")}`
+      );
     }
-  );
+
+    return {
+      experienceId: aiExp.experienceId,
+      role: aiExp.role,
+      institution: hardcoded.institution,
+      location: hardcoded.location,
+      dates: hardcoded.dates,
+      bullets: aiExp.bullets,
+    };
+  });
 
   // Merge projects by ID - AI controls order via array position
   const projects: Resume["projects"] = input.projects.map((aiProj) => {

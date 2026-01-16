@@ -13,8 +13,8 @@ import { createClient } from "@supabase/supabase-js";
 import { generateResumePDFBuffer, uploadPDFToSupabase } from "./lib/utils.js";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
-import AIInput from "./cache/resume.example.json" with { type: "json" };
-import { ResumeInput } from "./generated/ResumeInput.js";
+import AIInput from "./cache/request.example.json" with { type: "json" };
+import { ResumeInputType } from "./generated/ResumeInputType.js";
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -64,7 +64,7 @@ if (hasCambria) {
 // Routes
 app.post("/create-resume", async (req: Request, res: Response) => {
   try {
-    const resumeData = mergeResumeData(req.body as ResumeInput);
+    const resumeData = mergeResumeData(req.body as ResumeInputType);
     const validation = validateResumeData(resumeData);
 
     if (!validation.valid) {
@@ -106,7 +106,7 @@ app.post("/create-resume", async (req: Request, res: Response) => {
 
 app.get("/base-resume", async (req: Request, res: Response) => {
   try {
-    const baseResumePath = join(__dirname, "cache", "resume.json");
+    const baseResumePath = join(__dirname, "cache", "base-resume.json");
 
     if (!existsSync(baseResumePath)) {
       return res.status(404).json({
@@ -129,7 +129,7 @@ app.get("/base-resume", async (req: Request, res: Response) => {
 
 app.get("/test", async (req: Request, res: Response) => {
   try {
-    const resumeData = mergeResumeData(AIInput as ResumeInput);
+    const resumeData = mergeResumeData(AIInput as ResumeInputType);
     const pdfBuffer = await generateResumePDFBuffer(
       resumeData,
       hasCambria,

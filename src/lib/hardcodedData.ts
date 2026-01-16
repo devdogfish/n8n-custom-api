@@ -12,24 +12,25 @@ export const HARDCODED_DATA = {
     job: "6385 South St., Halifax | +1 (902) 943-0714 | luigigirke@gmail.com | https://luigigirke.com",
   },
 
-  // Experience entries - AI fills role and bullets for each
-  experience: [
-    {
+  // Experience entries - AI selects which to include, controls order, and fills role and bullets
+  // Each experience has a unique ID that AI references
+  experience: {
+    apollotec: {
       institution: "Apollotec.pt",
       location: "Coimbra, Portugal",
       dates: "Summer 2025",
     },
-    {
+    etpzp: {
       institution: "ETPZP",
       location: "Leiria, Portugal",
       dates: "2024 - 2025",
     },
-    {
+    "hope-media-house": {
       institution: "Hope Media House",
       location: "Vancouver, BC, Canada",
       dates: "Summer 2024",
     },
-  ],
+  },
 
   // Project entries - AI selects which to include, controls order, and fills bullets
   // Each project has a unique ID that AI references

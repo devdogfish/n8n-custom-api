@@ -4,19 +4,20 @@
   "skills": [
     {
       "label": "Languages",
-      "value": "TypeScript, JavaScript, Java, PHP, Python, SQL, HTML/CSS, Liquid"
+      "value": "TypeScript, JavaScript, Java, PHP, Python, Bash, SQL, HTML/CSS, Liquid"
     },
     {
       "label": "Frameworks & Libraries",
-      "value": "Next.js, React.js, Express.js, Prisma ORM, Kysely"
+      "value": "Next.js, React.js, Express.js, Prisma ORM, Kysely, TailwindCSS, DaisyUI5, GSAP, i18next, Zod, Resend, React-PDF, Shadcn UI, Advanced Custom Fields (ACF), React Three Fiber"
     },
     {
       "label": "Tools & Platforms",
-      "value": "Bun, WordPress, PostgreSQL, Docker, Linux, Git, REST APIs, Google Sheets API, Google Drive API, Google Maps API, GatewayAPI, Active Directory, Zoho API"
+      "value": "Bun, WordPress, PostgreSQL, Docker, Active Directory, Linux, SSH, Git, Vercel, Netlify, Nginx, Node.js, REST APIs, Google Sheets API, Google Drive API, Google Maps API, GatewayAPI, Zoho API, Blender"
     }
   ],
   "experience": [
     {
+      "experienceId": "apollotec",
       "role": "Full-Stack Developer",
       "bullets": [
         "Built internal email template management tool using Express.js with custom React.js interface",
@@ -24,6 +25,7 @@
       ]
     },
     {
+      "experienceId": "etpzp",
       "role": "DevOps/Full-Stack Developer",
       "bullets": [
         "Built Flash SMS notification system with Next.js and TypeScript, integrated with GatewayAPI and PostgreSQL",
@@ -32,11 +34,12 @@
       ]
     },
     {
+      "experienceId": "hope-media-house",
       "role": "Frontend/WordPress/Shopify Developer",
       "bullets": [
         "Integrated PHP and JavaScript with WordPress Advanced Custom Fields for Sitings.ca",
-        "Contributed to Shopify theme development using Liquid",
-        "Worked on Beautifi web app using React.js with PostgreSQL and Kysely query builder"
+        "Contributed to Shopify theme development using Liquid for Baden's shopify store.",
+        "Worked on Beautifi web app using Next.js with PostgreSQL and Kysely query builder"
       ]
     }
   ],
@@ -44,17 +47,18 @@
     {
       "projectId": "yda-crm",
       "bullets": [
-        "Developing a comprehensive customer management and go-kart booking system to automate business operations",
+        "Developing a comprehensive customer management with go-kart event registration and invoicing system to automate business operations",
         "Utilizing TypeScript, Next.js, and Prisma to create a scalable full-stack architecture",
-        "Implementing features for customer data handling, session scheduling, and resource allocation"
+        "Implementing features for customer data handling, session scheduling, and resource allocation",
+        "Used Resend for emails, react-PDF for invoice generation, and Google Drive API for storing PDFs"
       ]
     },
     {
       "projectId": "etpzp-sms",
       "bullets": [
-        "Developed a flash SMS sending system for staff at ETPZP high school to streamline internal communication",
-        "Architected a robust backend using Next.js, TypeScript, and PostgreSQL to handle message queuing and delivery",
-        "Deployed the solution on a self-hosted Linux server utilizing Docker for containerized environment management"
+        "Developed a flash SMS sending system for staff at ETPZP high school to streamline external communication",
+        "Architected a robust backend using Next.js, TypeScript, GatewayAPI, and PostgreSQL to handle message queuing and delivery",
+        "Deployed the solution on a self-hosted Linux server utilizing Docker & Nginx for containerized environment management"
       ]
     },
     {
@@ -62,7 +66,7 @@
       "bullets": [
         "Built a real estate location analysis and site selection tool to assist in property assessment",
         "Integrated PHP and JavaScript with WordPress Advanced Custom Fields (ACF) to deliver dynamic data visualization",
-        "Optimized the platform for performance, enabling efficient filtering and display of real estate data"
+        "Used Google Maps JavaScript API for interactive maps integration with clusters and clickable property pins"
       ]
     },
     {

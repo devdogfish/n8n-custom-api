@@ -8,6 +8,7 @@ export interface Resume {
     value: string; // e.g., "TypeScript, JavaScript, Python"
   }>;
   experience: Array<{
+    experienceId: "apollotec" | "etpzp" | "hope-media-house";
     role: string; // AI-generated, will be bold
     institution: string; // Hardcoded, not bold
     location: string; // Hardcoded, not bold

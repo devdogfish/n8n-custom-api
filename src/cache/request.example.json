@@ -1,0 +1,69 @@
+{
+  "isInternship": false,
+  "summary": "Frontend Engineer (React Experience) with hands-on experience building React and Next.js applications using TypeScript, HTML5, CSS3 and the Node.js (Express) ecosystem. Experienced in Git-based workflows, Docker deployments, and integrating REST APIs and PostgreSQL for scalable frontend solutions.",
+  "skills": [
+    {
+      "label": "Languages",
+      "value": "TypeScript, JavaScript, HTML5, CSS3"
+    },
+    {
+      "label": "Frameworks & Libraries",
+      "value": "React.js, Next.js, Express.js, Prisma, Kysely"
+    },
+    {
+      "label": "Tools & Platforms",
+      "value": "Git, Docker, PostgreSQL, REST APIs"
+    }
+  ],
+  "experience": [
+    {
+      "experienceId": "etpzp",
+      "role": "Frontend Engineer (React Experience) / DevOps/Full-Stack Developer",
+      "bullets": [
+        "Did build a flash SMS notification system using Next.js and TypeScript with GatewayAPI and PostgreSQL",
+        "Did deploy a self-hosted production server using Docker on Linux and manage environment stability",
+        "Did integrate Windows Active Directory for school-wide authentication"
+      ]
+    },
+    {
+      "experienceId": "apollotec",
+      "role": "Frontend Engineer (React Experience) / Frontend/WordPress/Shopify Developer",
+      "bullets": [
+        "Did develop features for the Beautifi web app using React.js with PostgreSQL and Kysely",
+        "Did integrate PHP and JavaScript with WordPress Advanced Custom Fields (ACF) for Sitings.ca",
+        "Did contribute to Shopify theme development using Liquid"
+      ]
+    },
+    {
+      "experienceId": "hope-media-house",
+      "role": "Full-Stack Developer",
+      "bullets": [
+        "Did build an internal email template management tool using Express.js with a custom React.js interface",
+        "Did integrate Zoho API to autofill employee personal information for email templates"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "projectId": "yda-crm",
+      "bullets": [
+        "Did develop a customer management and go-kart booking system using TypeScript, Next.js, and Prisma",
+        "Did implement customer data handling and session scheduling features using Next.js and TypeScript"
+      ]
+    },
+    {
+      "projectId": "etpzp-sms",
+      "bullets": [
+        "Did build a flash SMS sending system using Next.js, TypeScript, and PostgreSQL",
+        "Did deploy the solution on a self-hosted Linux server using Docker"
+      ]
+    },
+    {
+      "projectId": "sitings",
+      "bullets": [
+        "Did build a real estate location analysis and site selection tool using PHP, JavaScript, and WordPress ACF",
+        "Did optimize the platform for performance and efficient filtering using JavaScript and ACF"
+      ]
+    }
+  ]
+}
