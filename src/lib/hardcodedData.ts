@@ -9,12 +9,17 @@ export const HARDCODED_DATA = {
   contact: {
     internship:
       "6385 South St., Halifax | +1 (902) 943-0714 | internship@luigigirke.com | https://luigigirke.com",
-    job: "6385 South St., Halifax | +1 (902) 943-0714 | luigigirke@gmail.com | https://luigigirke.com",
+    job: "6385 South St., Halifax | +1 (902) 943-0714 | job@luigigirke.com | https://luigigirke.com",
   },
 
   // Experience entries - AI selects which to include, controls order, and fills role and bullets
   // Each experience has a unique ID that AI references
   experience: {
+    youngdriversacademy: {
+      institution: "Young Drivers Academy (Freelance)",
+      location: "Remote — Leiden, Netherlands",
+      dates: "Summer 2025",
+    },
     apollotec: {
       institution: "Apollotec.pt",
       location: "Coimbra, Portugal",
@@ -38,7 +43,7 @@ export const HARDCODED_DATA = {
     "yda-crm": {
       title: "CRM for Young Drivers Academy",
       subtitle: "Customer Management & Go-Kart Booking System",
-      dates: "2025",
+      dates: "July 2025 - Present",
       link: null, // For now I don't have sufficient documentation about this project on my website, so I don't want the employer to look at this
     },
     "etpzp-sms": {

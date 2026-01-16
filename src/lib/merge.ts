@@ -1,15 +1,15 @@
-import type { Resume } from "../types.js";
 import { HARDCODED_DATA } from "./hardcodedData.js";
 import { ResumeInputType } from "../generated/ResumeInputType.js";
+import { MasterResume } from "../types.js";
 
 /**
- * Merges hardcoded data with AI-generated input to create a complete Resume.
+ * Merges hardcoded data with AI-generated input to create a complete MasterResume.
  * Experience merged by ID - AI controls ordering and selection.
  * Projects merged by ID - AI controls ordering and selection.
  */
-export function mergeResumeData(input: ResumeInputType): Resume {
+export function mergeResumeData(input: ResumeInputType): MasterResume {
   // Merge experience by ID - AI controls order via array position
-  const experience: Resume["experience"] = input.experience.map((aiExp) => {
+  const experience: MasterResume["experience"] = input.experience.map((aiExp) => {
     const hardcoded = HARDCODED_DATA.experience[aiExp.experienceId];
 
     if (!hardcoded) {
@@ -31,7 +31,7 @@ export function mergeResumeData(input: ResumeInputType): Resume {
   });
 
   // Merge projects by ID - AI controls order via array position
-  const projects: Resume["projects"] = input.projects.map((aiProj) => {
+  const projects: MasterResume["projects"] = input.projects.map((aiProj) => {
     const hardcoded = HARDCODED_DATA.projects[aiProj.projectId];
 
     if (!hardcoded) {

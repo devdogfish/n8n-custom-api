@@ -4,7 +4,7 @@ import { config } from "dotenv";
 config({ path: ".env.local" });
 import express, { type Request, type Response } from "express";
 import PDFDocument from "pdfkit";
-import { validateResumeData } from "./types.js";
+import { validateResumeData } from "./lib/validation.js";
 import { mergeResumeData } from "./lib/merge.js";
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";

@@ -1,6 +1,6 @@
 {
   "isInternship": false,
-  "summary": "DevOps Engineer and Bachelor of Computer Science student at Dalhousie University with a focus on building reliable systems at the intersection of automation, infrastructure, and deployment. Experienced in full-stack development, API integration, and creating custom solutions for real estate and management workflows.",
+  "summary": "Full-Stack Developer and DevOps Engineer specializing in TypeScript, Next.js, and React.js with experience building customer management systems, deploying Docker environments, and integrating APIs across enterprise and freelance projects.",
   "skills": [
     {
       "label": "Languages",
@@ -13,33 +13,45 @@
     {
       "label": "Tools & Platforms",
       "value": "Bun, WordPress, PostgreSQL, Docker, Active Directory, Linux, SSH, Git, Vercel, Netlify, Nginx, Node.js, REST APIs, Google Sheets API, Google Drive API, Google Maps API, GatewayAPI, Zoho API, Blender"
+    },
+    {
+      "label": "Languages Spoken",
+      "value": "German (native), English (fluent), Portuguese (advanced), Chinese (beginner)"
     }
   ],
   "experience": [
+    {
+      "experienceId": "youngdriversacademy",
+      "role": "Software/Web Developer (remote freelancing)",
+      "bullets": [
+        "Lead developer for customer management platform serving a Netherlands-based go-karting company",
+        "Architected large full-stack solution handling customer data, event registrations, and improved invoicing workflows"
+      ]
+    },
     {
       "experienceId": "apollotec",
       "role": "Full-Stack Developer",
       "bullets": [
         "Built internal email template management tool using Express.js with custom React.js interface",
-        "Integrated Zoho API to autofill employee personal information for email templates"
+        "Integrated Zoho API to autofill authenticated employee personal information for email templates"
       ]
     },
     {
       "experienceId": "etpzp",
       "role": "DevOps/Full-Stack Developer",
       "bullets": [
-        "Built Flash SMS notification system with Next.js and TypeScript, integrated with GatewayAPI and PostgreSQL",
-        "Deployed self-hosted production server using Docker containers on a Linux VM",
-        "Integrated Windows Active Directory for school-wide authentication"
+        "Designed and deployed school-wide emergency notification system for ETPZP high school",
+        "Managed full DevOps lifecycle from development through production deployment on local, self-hosted infrastructure",
+        "Integrated with the school's Active Directory server for authentication"
       ]
     },
     {
       "experienceId": "hope-media-house",
       "role": "Frontend/WordPress/Shopify Developer",
       "bullets": [
-        "Integrated PHP and JavaScript with WordPress Advanced Custom Fields for Sitings.ca",
-        "Contributed to Shopify theme development using Liquid for Baden's shopify store.",
-        "Worked on Beautifi web app using Next.js with PostgreSQL and Kysely query builder"
+        "Developed custom WordPress solutions and Shopify themes for multiple clients including Baden, Beautifi, DonChendo and Sitings",
+        "Collaborated closely with designers to translate mockups into responsive, pixel-perfect code",
+        "Worked with marketing and developer team"
       ]
     }
   ],
@@ -47,26 +59,25 @@
     {
       "projectId": "yda-crm",
       "bullets": [
-        "Developing a comprehensive customer management with go-kart event registration and invoicing system to automate business operations",
-        "Utilizing TypeScript, Next.js, and Prisma to create a scalable full-stack architecture",
-        "Implementing features for customer data handling, session scheduling, and resource allocation",
-        "Used Resend for emails, react-PDF for invoice generation, and Google Drive API for storing PDFs"
+        "Developing a large customer management system with go-kart event registration and invoicing features to automate business operations",
+        "Utilizing TypeScript, Next.js, and Prisma in a well-architected scalable setup",
+        "Used Resend for emails, React-PDF for invoice generation, and Google Drive API for storing PDFs"
       ]
     },
     {
       "projectId": "etpzp-sms",
       "bullets": [
-        "Developed a flash SMS sending system for staff at ETPZP high school to streamline external communication",
-        "Architected a robust backend using Next.js, TypeScript, GatewayAPI, and PostgreSQL to handle message queuing and delivery",
-        "Deployed the solution on a self-hosted Linux server utilizing Docker & Nginx for containerized environment management"
+        "Developed a flash SMS sending system for staff at ETPZP high school to streamline external communication in one centralized interface with additional features",
+        "Architected a robust backend using Next.js, TypeScript, GatewayAPI, and PostgreSQL to handle message queuing, delivery and storage",
+        "Deployed the solution on a self-hosted school computer running Nginx and Docker on a virtual Ubuntu machine"
       ]
     },
     {
       "projectId": "sitings",
       "bullets": [
-        "Built a real estate location analysis and site selection tool to assist in property assessment",
-        "Integrated PHP and JavaScript with WordPress Advanced Custom Fields (ACF) to deliver dynamic data visualization",
-        "Used Google Maps JavaScript API for interactive maps integration with clusters and clickable property pins"
+        "Built a real estate site selection & finding tool",
+        "Integrated PHP and JavaScript with WordPress Advanced Custom Fields (ACF) to display custom post type data in a \"template\" file",
+        "Used Google Maps JavaScript API for interactive map integration with clusters and clickable site pins"
       ]
     },
     {

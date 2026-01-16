@@ -1,6 +1,6 @@
 import PDFDocument from "pdfkit";
 import { join, dirname } from "path";
-import type { Resume } from "../types.js";
+import type { MasterResume } from "../types.js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { fileURLToPath } from "url";
 
@@ -69,7 +69,7 @@ export function renderBullets(
 
 // Generate PDF and return it as a Buffer
 export async function generateResumePDFBuffer(
-  data: Resume,
+  data: MasterResume,
   hasCambria: boolean,
   fonts: {
     regular: string;
@@ -123,7 +123,9 @@ export async function generateResumePDFBuffer(
     if (websiteMatch?.[1]) {
       const website = websiteMatch[1];
       const textWidth = doc.widthOfString(contact);
-      const websiteStart = doc.widthOfString(contact.substring(0, contact.indexOf(website)));
+      const websiteStart = doc.widthOfString(
+        contact.substring(0, contact.indexOf(website))
+      );
       const websiteWidth = doc.widthOfString(website);
       const pageWidth = doc.page.width;
       const centerOffset = (pageWidth - textWidth) / 2;
@@ -138,17 +140,27 @@ export async function generateResumePDFBuffer(
     if (addressMatch?.[1]) {
       const address = addressMatch[1];
       const textWidth = doc.widthOfString(contact);
-      const addressStart = doc.widthOfString(contact.substring(0, contact.indexOf(address)));
+      const addressStart = doc.widthOfString(
+        contact.substring(0, contact.indexOf(address))
+      );
       const addressWidth = doc.widthOfString(address);
       const pageWidth = doc.page.width;
       const startX = (pageWidth - textWidth) / 2 + addressStart;
-      doc.link(startX, contactY, addressWidth, 12, "https://maps.app.goo.gl/bEP4bdKxtqGBnx3a8");
+      doc.link(
+        startX,
+        contactY,
+        addressWidth,
+        12,
+        "https://maps.app.goo.gl/bEP4bdKxtqGBnx3a8"
+      );
     }
 
     if (emailMatch?.[1]) {
       const email = emailMatch[1];
       const textWidth = doc.widthOfString(contact);
-      const emailStart = doc.widthOfString(contact.substring(0, contact.indexOf(email)));
+      const emailStart = doc.widthOfString(
+        contact.substring(0, contact.indexOf(email))
+      );
       const emailWidth = doc.widthOfString(email);
       const pageWidth = doc.page.width;
       const startX = (pageWidth - textWidth) / 2 + emailStart;
@@ -158,22 +170,38 @@ export async function generateResumePDFBuffer(
     if (phoneMatch?.[0]) {
       const phone = phoneMatch[0];
       const textWidth = doc.widthOfString(contact);
-      const phoneStart = doc.widthOfString(contact.substring(0, contact.indexOf(phone)));
+      const phoneStart = doc.widthOfString(
+        contact.substring(0, contact.indexOf(phone))
+      );
       const phoneWidth = doc.widthOfString(phone);
       const pageWidth = doc.page.width;
       const startX = (pageWidth - textWidth) / 2 + phoneStart;
-      doc.link(startX, contactY, phoneWidth, 12, `tel:${phone.replace(/\D/g, '')}`);
+      doc.link(
+        startX,
+        contactY,
+        phoneWidth,
+        12,
+        `tel:${phone.replace(/\D/g, "")}`
+      );
     }
 
     if (websiteMatch?.[1]) {
       const website = websiteMatch[1];
       const textWidth = doc.widthOfString(contact);
-      const websiteStart = doc.widthOfString(contact.substring(0, contact.indexOf(website)));
+      const websiteStart = doc.widthOfString(
+        contact.substring(0, contact.indexOf(website))
+      );
       const websiteWidth = doc.widthOfString(website);
       const pageWidth = doc.page.width;
       const startX = (pageWidth - textWidth) / 2 + websiteStart;
       // Include the external link icon in the clickable area
-      doc.link(startX, contactY, websiteWidth + iconPadding + iconSize, 12, website);
+      doc.link(
+        startX,
+        contactY,
+        websiteWidth + iconPadding + iconSize,
+        12,
+        website
+      );
     }
 
     // Summary Section
@@ -211,7 +239,9 @@ export async function generateResumePDFBuffer(
       if (project.link) {
         // Add space for the icon (reduced by 1 pixel to bring comma closer)
         const spaceWidth = projectIconSize + projectIconPadding * 2 - 1;
-        doc.text(" ".repeat(Math.ceil(spaceWidth / doc.widthOfString(" "))), { continued: true });
+        doc.text(" ".repeat(Math.ceil(spaceWidth / doc.widthOfString(" "))), {
+          continued: true,
+        });
       }
 
       // Draw comma and subtitle (italic), dates (regular)
@@ -226,8 +256,16 @@ export async function generateResumePDFBuffer(
         drawExternalLinkIcon(doc, iconX, iconY, projectIconSize);
 
         // Add clickable link overlay on the title (including the icon)
-        const url = project.link.startsWith("http") ? project.link : `https://${project.link}`;
-        doc.link(titleStartX, titleStartY, titleWidth + projectIconPadding + projectIconSize, 12, url);
+        const url = project.link.startsWith("http")
+          ? project.link
+          : `https://${project.link}`;
+        doc.link(
+          titleStartX,
+          titleStartY,
+          titleWidth + projectIconPadding + projectIconSize,
+          12,
+          url
+        );
       }
 
       renderBullets(doc, project.bullets, fontRegular);
@@ -248,7 +286,10 @@ export async function generateResumePDFBuffer(
     // Skills Section
     renderSectionTitle(doc, "SKILLS", fontBold, lineStart, lineEnd);
     data.skills.forEach((skill, index) => {
-      doc.fontSize(10).font(fontBold).text(`${skill.label}: `, { continued: true });
+      doc
+        .fontSize(10)
+        .font(fontBold)
+        .text(`${skill.label}: `, { continued: true });
       doc.font(fontRegular).text(skill.value);
     });
 
