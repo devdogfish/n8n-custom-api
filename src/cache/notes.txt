@@ -1,0 +1,8 @@
+{
+      "projectId": "workouts-tracker",
+      "bullets": [
+        "Designed and built a workout tracker with a Google Sheets backend to minimize friction in logging exercises",
+        "Implemented logic to automatically calculate progressive overload, helping track fitness improvements over time",
+        "Created a user-friendly interface focused on speed and ease of use during training sessions"
+      ]
+    }

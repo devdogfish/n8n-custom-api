@@ -1,18 +1,14 @@
 {
-  "isInternship": false,
-  "summary": "Full-Stack Developer and DevOps Engineer specializing in TypeScript, Next.js, and React.js with experience building customer management systems, deploying Docker environments, and integrating APIs across enterprise and freelance projects.",
+  "isInternship": true,
+  "summary": "Full-Stack Developer and DevOps Engineer specializing in TypeScript with experience building customer management systems, deploying Docker environments, and integrating APIs across enterprise and freelance projects.",
   "skills": [
     {
       "label": "Languages",
-      "value": "TypeScript, JavaScript, Java, PHP, Python, Bash, SQL, HTML/CSS, Liquid"
+      "value": "TypeScript, Java, Python, PHP, PostgreSQL"
     },
     {
       "label": "Frameworks & Libraries",
-      "value": "Next.js, React.js, Express.js, Prisma ORM, Kysely, TailwindCSS, DaisyUI5, GSAP, i18next, Zod, Resend, React-PDF, Shadcn UI, Advanced Custom Fields (ACF), React Three Fiber"
-    },
-    {
-      "label": "Tools & Platforms",
-      "value": "Bun, WordPress, PostgreSQL, Docker, Active Directory, Linux, SSH, Git, Vercel, Netlify, Nginx, Node.js, REST APIs, Google Sheets API, Google Drive API, Google Maps API, GatewayAPI, Zoho API, Blender"
+      "value": "Next.js & React, Express.js, TailwindCSS, DaisyUI5, GSAP"
     },
     {
       "label": "Languages Spoken",
@@ -22,7 +18,7 @@
   "experience": [
     {
       "experienceId": "youngdriversacademy",
-      "role": "Software/Web Developer (remote freelancing)",
+      "role": "Software/Web Developer",
       "bullets": [
         "Lead developer for customer management platform serving a Netherlands-based go-karting company",
         "Architected large full-stack solution handling customer data, event registrations, and improved invoicing workflows"

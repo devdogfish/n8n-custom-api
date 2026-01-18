@@ -14,6 +14,7 @@ import { generateResumePDFBuffer, uploadPDFToSupabase } from "./lib/utils.js";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
 import AIInput from "./cache/request.example.json" with { type: "json" };
+import baseResume from "./cache/base-resume.export.json" with { type: "json" };
 import { ResumeInputType } from "./generated/ResumeInputType.js";
 
 // Initialize Supabase client
@@ -130,6 +131,26 @@ app.get("/base-resume", async (req: Request, res: Response) => {
 app.get("/test", async (req: Request, res: Response) => {
   try {
     const resumeData = mergeResumeData(AIInput as ResumeInputType);
+    const pdfBuffer = await generateResumePDFBuffer(
+      resumeData,
+      hasCambria,
+      FONTS
+    );
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "inline; filename=resume.pdf");
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.error("Test error:", error);
+    res.status(500).json({
+      error: "Test failed",
+      details: [(error as Error).message],
+    });
+  }
+});
+app.get("/base-resume-pdf", async (req: Request, res: Response) => {
+  try {
+    const resumeData = mergeResumeData(baseResume as ResumeInputType);
     const pdfBuffer = await generateResumePDFBuffer(
       resumeData,
       hasCambria,
