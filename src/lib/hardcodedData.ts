@@ -50,7 +50,7 @@ export const HARDCODED_DATA = {
       title: "ETPZP SMS System",
       subtitle: "Flash SMS Application for Portuguese High School Staff",
       dates: "2024 - 2025",
-      link: "https://etpzp-sms-three.vercel.app/en",
+      link: "https://etpzp-sms-demo.luigigirke.com",
     },
     sitings: {
       title: "Sitings.ca",
