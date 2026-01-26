@@ -1,8 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
-import { spawn } from "child_process";
 import type { AutomaticSpeechRecognitionPipeline } from "@xenova/transformers";
-import wavefile from "wavefile";
+import { OggOpusDecoder } from "ogg-opus-decoder";
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -24,74 +23,101 @@ const getTranscriber = async (): Promise<AutomaticSpeechRecognitionPipeline> => 
   return transcriber;
 };
 
-// Convert any audio format to WAV using ffmpeg
-const convertToWav = (inputBuffer: Buffer): Promise<Buffer> => {
-  return new Promise((resolve, reject) => {
-    const ffmpeg = spawn("ffmpeg", [
-      "-i", "pipe:0",           // Read from stdin
-      "-ar", "16000",           // Sample rate 16kHz (Whisper requirement)
-      "-ac", "1",               // Mono
-      "-f", "wav",              // Output format WAV
-      "-acodec", "pcm_s16le",   // 16-bit PCM
-      "pipe:1",                 // Write to stdout
-    ]);
+/**
+ * Downsample audio from sourceRate to targetRate using linear interpolation.
+ * For 48kHz → 16kHz, this is a 3:1 ratio.
+ */
+const downsample = (
+  samples: Float32Array,
+  sourceRate: number,
+  targetRate: number
+): Float32Array => {
+  if (sourceRate === targetRate) {
+    return samples;
+  }
 
-    let outputBuffer = Buffer.alloc(0);
+  const ratio = sourceRate / targetRate;
+  const newLength = Math.floor(samples.length / ratio);
+  const result = new Float32Array(newLength);
 
-    ffmpeg.stdout.on("data", (chunk) => {
-      outputBuffer = Buffer.concat([outputBuffer, chunk]);
-    });
-    ffmpeg.stderr.on("data", (data) => {
-      // ffmpeg outputs progress to stderr, only log errors
-      const msg = data.toString();
-      if (msg.includes("Error") || msg.includes("Invalid")) {
-        console.error("ffmpeg:", msg);
-      }
-    });
+  for (let i = 0; i < newLength; i++) {
+    // Linear interpolation for smoother downsampling
+    const srcIndex = i * ratio;
+    const srcIndexFloor = Math.floor(srcIndex);
+    const srcIndexCeil = Math.min(srcIndexFloor + 1, samples.length - 1);
+    const fraction = srcIndex - srcIndexFloor;
 
-    ffmpeg.on("close", (code) => {
-      if (code === 0) {
-        resolve(outputBuffer);
-      } else {
-        reject(new Error(`ffmpeg exited with code ${code}`));
-      }
-    });
+    result[i] =
+      samples[srcIndexFloor] * (1 - fraction) +
+      samples[srcIndexCeil] * fraction;
+  }
 
-    ffmpeg.on("error", (err) => reject(err));
-
-    // Write input buffer to ffmpeg stdin
-    ffmpeg.stdin.write(inputBuffer);
-    ffmpeg.stdin.end();
-  });
+  return result;
 };
 
-// Convert WAV buffer to Float32Array for Whisper (normalized -1 to 1)
-const wavToFloat32 = (wavBuffer: Buffer): Float32Array => {
-  const wav = new wavefile.WaveFile();
-  wav.fromBuffer(new Uint8Array(wavBuffer));
+/**
+ * Convert stereo to mono by averaging channels
+ */
+const toMono = (channelData: Float32Array[]): Float32Array => {
+  if (channelData.length === 1) {
+    return channelData[0];
+  }
 
-  // Convert to 32-bit float which normalizes samples to -1.0 to 1.0
-  wav.toBitDepth("32f");
+  // Average all channels
+  const length = channelData[0].length;
+  const mono = new Float32Array(length);
+  const numChannels = channelData.length;
 
-  // getSamples returns Float64Array after 32f conversion
-  const samples = wav.getSamples(false);
-  return new Float32Array(samples);
+  for (let i = 0; i < length; i++) {
+    let sum = 0;
+    for (let ch = 0; ch < numChannels; ch++) {
+      sum += channelData[ch][i];
+    }
+    mono[i] = sum / numChannels;
+  }
+
+  return mono;
 };
 
-router.post("/transcribe", upload.single("file"), async (req, res) => {
+/**
+ * Decode OGG Opus file to 16kHz mono Float32Array for Whisper
+ */
+const decodeOggOpus = async (buffer: Buffer): Promise<Float32Array> => {
+  const decoder = new OggOpusDecoder();
+  await decoder.ready;
+
+  try {
+    const decoded = await decoder.decodeFile(new Uint8Array(buffer));
+
+    if (decoded.errors.length > 0) {
+      console.warn("Decode warnings:", decoded.errors);
+    }
+
+    // Convert to mono
+    const mono = toMono(decoded.channelData);
+
+    // Downsample from 48kHz to 16kHz
+    const resampled = downsample(mono, decoded.sampleRate, 16000);
+
+    return resampled;
+  } finally {
+    decoder.free();
+  }
+};
+
+router.post("/transcribe-ogg", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
     if (!file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    console.log(`Transcribing: ${file.originalname} (${(file.buffer.length / 1024).toFixed(1)} KB)`);
+    console.log(
+      `Transcribing: ${file.originalname} (${(file.buffer.length / 1024).toFixed(1)} KB)`
+    );
 
-    // Convert any audio format to WAV via ffmpeg
-    const wavBuffer = await convertToWav(file.buffer);
-
-    // Convert WAV to Float32Array for Whisper
-    const audioData = wavToFloat32(wavBuffer);
+    // Decode OGG Opus to 16kHz mono Float32Array
+    const audioData = await decodeOggOpus(file.buffer);
     const duration = (audioData.length / 16000).toFixed(1);
 
     const pipe = await getTranscriber();

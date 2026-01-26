@@ -15,9 +15,9 @@
     "express": "^5.1.0",
     "fs": "^0.0.1-security",
     "multer": "^2.0.2",
+    "ogg-opus-decoder": "^1.7.3",
     "pdfkit": "^0.17.2",
-    "vercel": "^50.5.1",
-    "wavefile": "^11.0.0"
+    "vercel": "^50.5.1"
   },
   "devDependencies": {
     "@types/express": "5.0.0",
