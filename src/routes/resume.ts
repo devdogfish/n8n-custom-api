@@ -1,13 +1,11 @@
 import { Router, type Request, type Response } from "express";
-import { existsSync } from "fs";
-import { readFile } from "fs/promises";
-import { join } from "path";
 import { validateResumeData } from "../lib/validation.js";
 import { mergeResumeData } from "../lib/merge.js";
 import { generateResumePDFBuffer, uploadPDFToSupabase } from "../lib/utils.js";
-import { supabase, BUCKET_NAME, hasCambria, FONTS, SRC_DIR } from "../config/index.js";
+import { supabase, BUCKET_NAME, hasCambria, FONTS } from "../config/index.js";
 import AIInput from "../cache/request.example.json" with { type: "json" };
 import baseResume from "../cache/base-resume.export.json" with { type: "json" };
+import baseResumeRaw from "../cache/base-resume.json" with { type: "json" };
 import { ResumeInputType } from "../generated/ResumeInputType.js";
 
 const router = Router();
@@ -29,7 +27,7 @@ router.post("/create-resume", async (req: Request, res: Response) => {
       hasCambria,
       FONTS,
     );
-    const { path, signedUrl } = await uploadPDFToSupabase(
+    const { path, signedUrl, id } = await uploadPDFToSupabase(
       supabase,
       BUCKET_NAME,
       pdfBuffer,
@@ -40,6 +38,7 @@ router.post("/create-resume", async (req: Request, res: Response) => {
       success: true,
       message: "Resume created and uploaded successfully",
       file: {
+        id,
         path,
         signedUrl,
         expiresIn: 3600,
@@ -54,27 +53,8 @@ router.post("/create-resume", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/base-resume", async (req: Request, res: Response) => {
-  try {
-    const baseResumePath = join(SRC_DIR, "cache", "base-resume.json");
-
-    if (!existsSync(baseResumePath)) {
-      return res.status(404).json({
-        error: "Base resume not found in cache",
-      });
-    }
-
-    const fileContent = await readFile(baseResumePath, "utf-8");
-    const jsonData = JSON.parse(fileContent);
-
-    return res.status(200).json(jsonData);
-  } catch (error) {
-    console.error("Error retrieving base resume:", error);
-    return res.status(500).json({
-      error: "Failed to retrieve base resume",
-      details: [(error as Error).message],
-    });
-  }
+router.get("/base-resume", (_req: Request, res: Response) => {
+  return res.status(200).json(baseResumeRaw);
 });
 
 router.get("/test", async (req: Request, res: Response) => {

@@ -16,7 +16,7 @@ export function drawExternalLinkIcon(
   doc: PDFKit.PDFDocument,
   x: number,
   y: number,
-  size: number = 7
+  size: number = 7,
 ) {
   doc.image(ICON_PATH, x, y, { width: size, height: size });
 }
@@ -27,7 +27,7 @@ export function renderSectionTitle(
   title: string,
   fontBold: string,
   lineStart: number,
-  lineEnd: number
+  lineEnd: number,
 ) {
   doc.fontSize(12).font(fontBold).text(title);
   doc.moveDown(0.125); // 3px gap (approximately 0.125 inches at 72 DPI)
@@ -38,7 +38,7 @@ export function renderSectionTitle(
 export function renderBullets(
   doc: PDFKit.PDFDocument,
   bullets: string[],
-  font: string
+  font: string,
 ) {
   const leftMargin = doc.page.margins.left;
   const textWidth =
@@ -76,7 +76,7 @@ export async function generateResumePDFBuffer(
     bold: string;
     italic: string;
     boldItalic: string;
-  }
+  },
 ): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 25 });
@@ -124,7 +124,7 @@ export async function generateResumePDFBuffer(
       const website = websiteMatch[1];
       const textWidth = doc.widthOfString(contact);
       const websiteStart = doc.widthOfString(
-        contact.substring(0, contact.indexOf(website))
+        contact.substring(0, contact.indexOf(website)),
       );
       const websiteWidth = doc.widthOfString(website);
       const pageWidth = doc.page.width;
@@ -141,7 +141,7 @@ export async function generateResumePDFBuffer(
       const address = addressMatch[1];
       const textWidth = doc.widthOfString(contact);
       const addressStart = doc.widthOfString(
-        contact.substring(0, contact.indexOf(address))
+        contact.substring(0, contact.indexOf(address)),
       );
       const addressWidth = doc.widthOfString(address);
       const pageWidth = doc.page.width;
@@ -151,7 +151,7 @@ export async function generateResumePDFBuffer(
         contactY,
         addressWidth,
         12,
-        "https://maps.app.goo.gl/bEP4bdKxtqGBnx3a8"
+        "https://maps.app.goo.gl/bEP4bdKxtqGBnx3a8",
       );
     }
 
@@ -159,7 +159,7 @@ export async function generateResumePDFBuffer(
       const email = emailMatch[1];
       const textWidth = doc.widthOfString(contact);
       const emailStart = doc.widthOfString(
-        contact.substring(0, contact.indexOf(email))
+        contact.substring(0, contact.indexOf(email)),
       );
       const emailWidth = doc.widthOfString(email);
       const pageWidth = doc.page.width;
@@ -171,7 +171,7 @@ export async function generateResumePDFBuffer(
       const phone = phoneMatch[0];
       const textWidth = doc.widthOfString(contact);
       const phoneStart = doc.widthOfString(
-        contact.substring(0, contact.indexOf(phone))
+        contact.substring(0, contact.indexOf(phone)),
       );
       const phoneWidth = doc.widthOfString(phone);
       const pageWidth = doc.page.width;
@@ -181,7 +181,7 @@ export async function generateResumePDFBuffer(
         contactY,
         phoneWidth,
         12,
-        `tel:${phone.replace(/\D/g, "")}`
+        `tel:${phone.replace(/\D/g, "")}`,
       );
     }
 
@@ -189,7 +189,7 @@ export async function generateResumePDFBuffer(
       const website = websiteMatch[1];
       const textWidth = doc.widthOfString(contact);
       const websiteStart = doc.widthOfString(
-        contact.substring(0, contact.indexOf(website))
+        contact.substring(0, contact.indexOf(website)),
       );
       const websiteWidth = doc.widthOfString(website);
       const pageWidth = doc.page.width;
@@ -200,7 +200,7 @@ export async function generateResumePDFBuffer(
         contactY,
         websiteWidth + iconPadding + iconSize,
         12,
-        website
+        website,
       );
     }
 
@@ -264,7 +264,7 @@ export async function generateResumePDFBuffer(
           titleStartY,
           titleWidth + projectIconPadding + projectIconSize,
           12,
-          url
+          url,
         );
       }
 
@@ -302,8 +302,8 @@ export async function uploadPDFToSupabase(
   supabase: SupabaseClient,
   bucketName: string,
   pdfBuffer: Buffer,
-  filename: string
-): Promise<{ path: string; signedUrl: string }> {
+  filename: string,
+): Promise<{ id: string; path: string; signedUrl: string }> {
   const filePath = `${Date.now()}_${filename}`;
 
   // Upload the file
@@ -329,6 +329,7 @@ export async function uploadPDFToSupabase(
   }
 
   return {
+    id: data.id,
     path: data.path,
     signedUrl: signedData.signedUrl,
   };
