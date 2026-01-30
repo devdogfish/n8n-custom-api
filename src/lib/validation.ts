@@ -1,4 +1,4 @@
-import { ValidationResult } from "../types.js";
+import { ValidationResult } from "../types/resume.js";
 
 export function validateResumeData(data: any): ValidationResult {
   const errors: string[] = [];
@@ -13,7 +13,7 @@ export function validateResumeData(data: any): ValidationResult {
   for (const field of requiredStringFields) {
     if (typeof data[field] !== "string" || data[field].trim() === "") {
       errors.push(
-        `Missing or invalid field: ${field} (must be a non-empty string)`
+        `Missing or invalid field: ${field} (must be a non-empty string)`,
       );
     }
   }
@@ -31,12 +31,12 @@ export function validateResumeData(data: any): ValidationResult {
       }
       if (typeof skill.label !== "string" || skill.label.trim() === "") {
         errors.push(
-          `Invalid skills[${index}].label (must be a non-empty string)`
+          `Invalid skills[${index}].label (must be a non-empty string)`,
         );
       }
       if (typeof skill.value !== "string" || skill.value.trim() === "") {
         errors.push(
-          `Invalid skills[${index}].value (must be a non-empty string)`
+          `Invalid skills[${index}].value (must be a non-empty string)`,
         );
       }
     });
@@ -53,7 +53,7 @@ export function validateResumeData(data: any): ValidationResult {
       }
       if (typeof exp.role !== "string" || exp.role.trim() === "") {
         errors.push(
-          `Invalid experience[${index}].role (must be a non-empty string)`
+          `Invalid experience[${index}].role (must be a non-empty string)`,
         );
       }
       if (
@@ -61,30 +61,30 @@ export function validateResumeData(data: any): ValidationResult {
         exp.institution.trim() === ""
       ) {
         errors.push(
-          `Invalid experience[${index}].institution (must be a non-empty string)`
+          `Invalid experience[${index}].institution (must be a non-empty string)`,
         );
       }
       if (typeof exp.location !== "string" || exp.location.trim() === "") {
         errors.push(
-          `Invalid experience[${index}].location (must be a non-empty string)`
+          `Invalid experience[${index}].location (must be a non-empty string)`,
         );
       }
       if (typeof exp.dates !== "string" || exp.dates.trim() === "") {
         errors.push(
-          `Invalid experience[${index}].dates (must be a non-empty string)`
+          `Invalid experience[${index}].dates (must be a non-empty string)`,
         );
       }
       if (!Array.isArray(exp.bullets)) {
         errors.push(`Invalid experience[${index}].bullets (must be an array)`);
       } else if (exp.bullets.length === 0) {
         errors.push(
-          `Invalid experience[${index}].bullets (must have at least one bullet)`
+          `Invalid experience[${index}].bullets (must have at least one bullet)`,
         );
       } else {
         exp.bullets.forEach((bullet: any, bIndex: number) => {
           if (typeof bullet !== "string" || bullet.trim() === "") {
             errors.push(
-              `Invalid experience[${index}].bullets[${bIndex}] (must be a non-empty string)`
+              `Invalid experience[${index}].bullets[${bIndex}] (must be a non-empty string)`,
             );
           }
         });
@@ -103,17 +103,17 @@ export function validateResumeData(data: any): ValidationResult {
       }
       if (typeof proj.title !== "string" || proj.title.trim() === "") {
         errors.push(
-          `Invalid projects[${index}].title (must be a non-empty string)`
+          `Invalid projects[${index}].title (must be a non-empty string)`,
         );
       }
       if (typeof proj.subtitle !== "string" || proj.subtitle.trim() === "") {
         errors.push(
-          `Invalid projects[${index}].subtitle (must be a non-empty string)`
+          `Invalid projects[${index}].subtitle (must be a non-empty string)`,
         );
       }
       if (typeof proj.dates !== "string" || proj.dates.trim() === "") {
         errors.push(
-          `Invalid projects[${index}].dates (must be a non-empty string)`
+          `Invalid projects[${index}].dates (must be a non-empty string)`,
         );
       }
       if (
@@ -121,20 +121,20 @@ export function validateResumeData(data: any): ValidationResult {
         (typeof proj.link !== "string" || proj.link.trim() === "")
       ) {
         errors.push(
-          `Invalid projects[${index}].link (must be a non-empty string or null)`
+          `Invalid projects[${index}].link (must be a non-empty string or null)`,
         );
       }
       if (!Array.isArray(proj.bullets)) {
         errors.push(`Invalid projects[${index}].bullets (must be an array)`);
       } else if (proj.bullets.length === 0) {
         errors.push(
-          `Invalid projects[${index}].bullets (must have at least one bullet)`
+          `Invalid projects[${index}].bullets (must have at least one bullet)`,
         );
       } else {
         proj.bullets.forEach((bullet: any, bIndex: number) => {
           if (typeof bullet !== "string" || bullet.trim() === "") {
             errors.push(
-              `Invalid projects[${index}].bullets[${bIndex}] (must be a non-empty string)`
+              `Invalid projects[${index}].bullets[${bIndex}] (must be a non-empty string)`,
             );
           }
         });
@@ -159,7 +159,7 @@ export function validateResumeData(data: any): ValidationResult {
         data.education[field].trim() === ""
       ) {
         errors.push(
-          `Missing or invalid field: education.${field} (must be a non-empty string)`
+          `Missing or invalid field: education.${field} (must be a non-empty string)`,
         );
       }
     }

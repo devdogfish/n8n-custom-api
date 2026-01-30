@@ -1,6 +1,6 @@
 import PDFDocument from "pdfkit";
 import { join, dirname } from "path";
-import type { MasterResume } from "../types.js";
+import type { MasterResume } from "../types/resume.js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { fileURLToPath } from "url";
 

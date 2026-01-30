@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import type { AutomaticSpeechRecognitionPipeline } from "@xenova/transformers";
 import { OggOpusDecoder } from "ogg-opus-decoder";
+import { requireApiKey } from "../middleware/index.js";
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -105,7 +106,7 @@ const decodeOggOpus = async (buffer: Buffer): Promise<Float32Array> => {
   }
 };
 
-router.post("/transcribe-ogg", upload.single("file"), async (req, res) => {
+router.post("/transcribe-ogg", requireApiKey, upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
     if (!file) {

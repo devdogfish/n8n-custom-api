@@ -3,6 +3,7 @@ import { validateResumeData } from "../lib/validation.js";
 import { mergeResumeData } from "../lib/merge.js";
 import { generateResumePDFBuffer, uploadPDFToSupabase } from "../lib/utils.js";
 import { supabase, BUCKET_NAME, hasCambria, FONTS } from "../config/index.js";
+import { requireApiKey } from "../middleware/index.js";
 import AIInput from "../cache/request.example.json" with { type: "json" };
 import baseResume from "../cache/base-resume.export.json" with { type: "json" };
 import baseResumeRaw from "../cache/base-resume.json" with { type: "json" };
@@ -10,7 +11,7 @@ import { ResumeInputType } from "../generated/ResumeInputType.js";
 
 const router = Router();
 
-router.post("/create-resume", async (req: Request, res: Response) => {
+router.post("/create-resume", requireApiKey, async (req: Request, res: Response) => {
   try {
     const resumeData = mergeResumeData(req.body as ResumeInputType);
     const validation = validateResumeData(resumeData);
@@ -53,11 +54,11 @@ router.post("/create-resume", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/base-resume", (_req: Request, res: Response) => {
+router.get("/base-resume", requireApiKey, (_req: Request, res: Response) => {
   return res.status(200).json(baseResumeRaw);
 });
 
-router.get("/test", async (req: Request, res: Response) => {
+router.get("/test", requireApiKey, async (req: Request, res: Response) => {
   try {
     const resumeData = mergeResumeData(AIInput as ResumeInputType);
     const pdfBuffer = await generateResumePDFBuffer(
