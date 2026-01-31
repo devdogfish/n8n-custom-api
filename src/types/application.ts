@@ -19,4 +19,5 @@ export interface Application {
   date: string; // "2026-01-28" (ISO date for sorting)
   status: string; // "Drafted" or "Rejected" or "Interview pending"
   tags: string[]; // ["React", "WebGL", "Three.js"]
+  eligible?: boolean; // true if sent=TRUE, false if sent=FALSE, undefined if sent is empty
 }

@@ -67,6 +67,20 @@ function rowToApplication(row: SheetRow, appliedAt: Date | null): Application {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-");
 
+  // Determine eligible based on "sent" column
+  // TRUE -> true, FALSE -> false, empty/undefined -> undefined
+  const sent = row.sent;
+  let eligible: boolean | undefined;
+  if (sent === true || sent === "TRUE" || sent === "true") {
+    eligible = true;
+  } else if (sent === false || sent === "FALSE" || sent === "false") {
+    eligible = false;
+  }
+  // else eligible remains undefined
+
+  // If sent is empty/undefined, status should be "In Progress"
+  const defaultStatus = eligible === undefined ? "In Progress" : "Applied";
+
   return {
     id,
     company,
@@ -87,10 +101,11 @@ function rowToApplication(row: SheetRow, appliedAt: Date | null): Application {
     description: (row.description as string) || "",
     href: (row.link as string) || (row.applyUrl as string) || "#",
     date: dateStr,
-    status: (row.status as string) || "Applied",
+    status: (row.status as string) || defaultStatus,
     tags: row.industries
       ? (row.industries as string).split(",").map((t) => t.trim())
       : [],
+    eligible,
   };
 }
 
