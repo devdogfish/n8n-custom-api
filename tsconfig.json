@@ -3,7 +3,9 @@
     "target": "ESNext",
     "module": "NodeNext",
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "strict": true
   },
   "exclude": ["node_modules"]
 }

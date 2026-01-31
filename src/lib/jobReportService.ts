@@ -1,9 +1,9 @@
-import type {
+import {
+  Application,
   DailyApplicationReport,
   HeatmapCalendarResponse,
-  Application,
   HeatmapDataPoint,
-} from "../types/auth.js";
+} from "../types/application.js";
 import {
   fetchSheetData,
   parseGoogleSheetsDate,
@@ -14,22 +14,12 @@ import {
 /**
  * Transform a sheet row to an Application object.
  */
-function rowToApplication(row: SheetRow): Application {
+function rowToApplication(row: SheetRow, appliedAt: Date | null): Application {
   const matchPercent = row.matchPercent as number | null;
-  const matchLevel =
-    matchPercent !== null
-      ? matchPercent >= 80
-        ? "high"
-        : matchPercent >= 50
-          ? "medium"
-          : "low"
-      : undefined;
 
   // Parse salary info - it may be a JSON string like '["$100k - $150k"]' or null
   let displayValue = "Not specified";
   let salaryAmount: number | undefined;
-  let salaryMin: number | undefined;
-  let salaryMax: number | undefined;
 
   const salaryInfo = row.salaryInfo as string | null;
   const salary = row.salary as string | null;
@@ -49,15 +39,17 @@ function rowToApplication(row: SheetRow): Application {
 
   // Try to extract numeric values from displayValue
   const rangeMatch = displayValue.match(
-    /\$?([\d,]+)k?\s*[-–]\s*\$?([\d,]+)k?/i
+    /\$?([\d,]+)k?\s*[-–]\s*\$?([\d,]+)k?/i,
   );
   if (rangeMatch) {
-    salaryMin =
+    // Use midpoint for range
+    const min =
       parseInt(rangeMatch[1].replace(/,/g, "")) *
       (displayValue.toLowerCase().includes("k") ? 1000 : 1);
-    salaryMax =
+    const max =
       parseInt(rangeMatch[2].replace(/,/g, "")) *
       (displayValue.toLowerCase().includes("k") ? 1000 : 1);
+    salaryAmount = Math.round((min + max) / 2);
   } else {
     const singleMatch = displayValue.match(/\$?([\d,]+)k?/i);
     if (singleMatch) {
@@ -67,35 +59,43 @@ function rowToApplication(row: SheetRow): Application {
     }
   }
 
-  const compensationType =
-    salaryMin && salaryMax ? "range" : salaryAmount ? "salary" : "salary";
+  // Determine salary type based on what we parsed
+  const salaryType: "salary" | "hourly" | "equity" | "range" = rangeMatch
+    ? "range"
+    : "salary";
+
+  // Generate a unique ID from company + role + date
+  const role = (row.title as string) || "Unknown Position";
+  const company = (row.companyName as string) || "Unknown Company";
+  const dateStr = appliedAt ? toISODateString(appliedAt) : "unknown";
+  const id = `${company}-${role}-${dateStr}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-");
 
   return {
-    position: (row.title as string) || "Unknown Position",
-    company: (row.companyName as string) || "Unknown Company",
+    id,
+    company,
+    role,
     location: (row.location as string) || "Unknown",
     locationType:
       ((row.locationType as string)?.toLowerCase() as
         | "remote"
         | "hybrid"
         | "on-site") || undefined,
-    compensation: {
-      type: compensationType,
+    salary: {
+      type: salaryType,
       currency: "USD",
       amount: salaryAmount,
-      min: salaryMin,
-      max: salaryMax,
       displayValue,
     },
-    matchPercentage: matchPercent ?? undefined,
-    matchLevel,
+    match: matchPercent ?? 0,
     description: (row.description as string) || "",
-    priority: "standard",
     href: (row.link as string) || (row.applyUrl as string) || "#",
-    resumeId: (row.resumeId as string) || "",
+    date: dateStr,
+    status: (row.status as string) || "Applied",
     tags: row.industries
       ? (row.industries as string).split(",").map((t) => t.trim())
-      : undefined,
+      : [],
   };
 }
 
@@ -107,10 +107,13 @@ export async function getAllApplications(): Promise<
 > {
   const rows = await fetchSheetData();
 
-  return rows.map((row) => ({
-    appliedAt: parseGoogleSheetsDate(row.appliedAt as string | null),
-    application: rowToApplication(row),
-  }));
+  return rows.map((row) => {
+    const appliedAt = parseGoogleSheetsDate(row.appliedAt as string | null);
+    return {
+      appliedAt,
+      application: rowToApplication(row, appliedAt),
+    };
+  });
 }
 
 /**
@@ -118,10 +121,9 @@ export async function getAllApplications(): Promise<
  * @param date - ISO date string (YYYY-MM-DD) or Date object
  */
 export async function getApplicationsByDate(
-  date: string | Date
+  date: string | Date,
 ): Promise<Application[]> {
-  const targetDate =
-    typeof date === "string" ? date : toISODateString(date);
+  const targetDate = typeof date === "string" ? date : toISODateString(date);
 
   const allApplications = await getAllApplications();
 
@@ -138,38 +140,28 @@ export async function getApplicationsByDate(
  * @param date - Optional ISO date string (YYYY-MM-DD). Defaults to today.
  */
 export async function getDailyReport(
-  date?: string
+  date?: string,
 ): Promise<DailyApplicationReport> {
   const targetDate = date || toISODateString(new Date());
   const applications = await getApplicationsByDate(targetDate);
 
   // Sort by match percentage (highest first)
-  const sorted = [...applications].sort(
-    (a, b) => (b.matchPercentage ?? 0) - (a.matchPercentage ?? 0)
-  );
+  const sorted = [...applications].sort((a, b) => b.match - a.match);
 
   // Featured: top match as main, next 2 high matches as secondary
-  const highMatches = sorted.filter(
-    (app) => app.matchPercentage && app.matchPercentage >= 80
-  );
+  const highMatches = sorted.filter((app) => app.match >= 80);
   const main = highMatches[0];
   const secondary = highMatches.slice(1, 3);
 
-  // Mark featured applications with correct priority
-  if (main) {
-    main.priority = "featured-main";
-  }
-  secondary.forEach((app) => {
-    app.priority = "featured-side";
-  });
-
   // Other applications (excluding featured)
-  const featuredIds = new Set([main, ...secondary].filter(Boolean).map((a) => a?.href));
-  const otherApplications = sorted.filter((app) => !featuredIds.has(app.href));
+  const featuredIds = new Set(
+    [main, ...secondary].filter(Boolean).map((a) => a?.id),
+  );
+  const otherApplications = sorted.filter((app) => !featuredIds.has(app.id));
 
   // Calculate average salary from applications with numeric values
   const salaries = applications
-    .map((app) => app.compensation.amount || app.compensation.min || 0)
+    .map((app) => app.salary.amount ?? 0)
     .filter((s) => s > 0);
   const avgSalary =
     salaries.length > 0
@@ -182,7 +174,8 @@ export async function getDailyReport(
       date: targetDate,
       totalApplications: applications.length,
       highPriorityCount: highMatches.length,
-      averageSalary: avgSalary > 0 ? `$${Math.round(avgSalary / 1000)}K` : "N/A",
+      averageSalary:
+        avgSalary > 0 ? `$${Math.round(avgSalary / 1000)}K` : "N/A",
     },
     featuredApplications: {
       main,
@@ -199,7 +192,7 @@ export async function getDailyReport(
  */
 export async function getHeatmapData(
   startDate?: string,
-  endDate?: string
+  endDate?: string,
 ): Promise<HeatmapCalendarResponse> {
   const allApplications = await getAllApplications();
 
