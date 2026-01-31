@@ -16,7 +16,7 @@ import healthRoutes from "./routes/health.js";
 import resumeRoutes from "./routes/resume.js";
 import transcribeRoutes from "./routes/transcribe.js";
 import authRoutes from "./routes/auth.js";
-import jobReportRoutes from "./routes/jobReport.js";
+import jobReportRoutes from "./routes/job-report.js";
 
 const app = express();
 app.use(express.json());

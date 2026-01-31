@@ -1,118 +1,239 @@
 import type {
   DailyApplicationReport,
   HeatmapCalendarResponse,
+  Application,
+  HeatmapDataPoint,
 } from "../types/auth.js";
+import {
+  fetchSheetData,
+  parseGoogleSheetsDate,
+  toISODateString,
+  type SheetRow,
+} from "./sheets.utils.js";
+
+/**
+ * Transform a sheet row to an Application object.
+ */
+function rowToApplication(row: SheetRow): Application {
+  const matchPercent = row.matchPercent as number | null;
+  const matchLevel =
+    matchPercent !== null
+      ? matchPercent >= 80
+        ? "high"
+        : matchPercent >= 50
+          ? "medium"
+          : "low"
+      : undefined;
+
+  // Parse salary info - it may be a JSON string like '["$100k - $150k"]' or null
+  let displayValue = "Not specified";
+  let salaryAmount: number | undefined;
+  let salaryMin: number | undefined;
+  let salaryMax: number | undefined;
+
+  const salaryInfo = row.salaryInfo as string | null;
+  const salary = row.salary as string | null;
+
+  if (salaryInfo && salaryInfo !== '[""]' && salaryInfo !== "[]") {
+    try {
+      const parsed = JSON.parse(salaryInfo);
+      if (Array.isArray(parsed) && parsed[0]) {
+        displayValue = parsed[0];
+      }
+    } catch {
+      displayValue = salaryInfo;
+    }
+  } else if (salary) {
+    displayValue = salary;
+  }
+
+  // Try to extract numeric values from displayValue
+  const rangeMatch = displayValue.match(
+    /\$?([\d,]+)k?\s*[-–]\s*\$?([\d,]+)k?/i
+  );
+  if (rangeMatch) {
+    salaryMin =
+      parseInt(rangeMatch[1].replace(/,/g, "")) *
+      (displayValue.toLowerCase().includes("k") ? 1000 : 1);
+    salaryMax =
+      parseInt(rangeMatch[2].replace(/,/g, "")) *
+      (displayValue.toLowerCase().includes("k") ? 1000 : 1);
+  } else {
+    const singleMatch = displayValue.match(/\$?([\d,]+)k?/i);
+    if (singleMatch) {
+      salaryAmount =
+        parseInt(singleMatch[1].replace(/,/g, "")) *
+        (displayValue.toLowerCase().includes("k") ? 1000 : 1);
+    }
+  }
+
+  const compensationType =
+    salaryMin && salaryMax ? "range" : salaryAmount ? "salary" : "salary";
+
+  return {
+    position: (row.title as string) || "Unknown Position",
+    company: (row.companyName as string) || "Unknown Company",
+    location: (row.location as string) || "Unknown",
+    locationType:
+      ((row.locationType as string)?.toLowerCase() as
+        | "remote"
+        | "hybrid"
+        | "on-site") || undefined,
+    compensation: {
+      type: compensationType,
+      currency: "USD",
+      amount: salaryAmount,
+      min: salaryMin,
+      max: salaryMax,
+      displayValue,
+    },
+    matchPercentage: matchPercent ?? undefined,
+    matchLevel,
+    description: (row.description as string) || "",
+    priority: "standard",
+    href: (row.link as string) || (row.applyUrl as string) || "#",
+    resumeId: (row.resumeId as string) || "",
+    tags: row.industries
+      ? (row.industries as string).split(",").map((t) => t.trim())
+      : undefined,
+  };
+}
+
+/**
+ * Get all job applications from Google Sheets.
+ */
+export async function getAllApplications(): Promise<
+  Array<{ appliedAt: Date | null; application: Application }>
+> {
+  const rows = await fetchSheetData();
+
+  return rows.map((row) => ({
+    appliedAt: parseGoogleSheetsDate(row.appliedAt as string | null),
+    application: rowToApplication(row),
+  }));
+}
+
+/**
+ * Get applications for a specific date.
+ * @param date - ISO date string (YYYY-MM-DD) or Date object
+ */
+export async function getApplicationsByDate(
+  date: string | Date
+): Promise<Application[]> {
+  const targetDate =
+    typeof date === "string" ? date : toISODateString(date);
+
+  const allApplications = await getAllApplications();
+
+  return allApplications
+    .filter((item) => {
+      if (!item.appliedAt) return false;
+      return toISODateString(item.appliedAt) === targetDate;
+    })
+    .map((item) => item.application);
+}
 
 /**
  * Get the daily job application report.
- * TODO: Replace with Google Sheets integration
+ * @param date - Optional ISO date string (YYYY-MM-DD). Defaults to today.
  */
-export async function getDailyReport(): Promise<DailyApplicationReport> {
-  // Placeholder data - replace with Google Sheets API call
+export async function getDailyReport(
+  date?: string
+): Promise<DailyApplicationReport> {
+  const targetDate = date || toISODateString(new Date());
+  const applications = await getApplicationsByDate(targetDate);
+
+  // Sort by match percentage (highest first)
+  const sorted = [...applications].sort(
+    (a, b) => (b.matchPercentage ?? 0) - (a.matchPercentage ?? 0)
+  );
+
+  // Featured: top match as main, next 2 high matches as secondary
+  const highMatches = sorted.filter(
+    (app) => app.matchPercentage && app.matchPercentage >= 80
+  );
+  const main = highMatches[0];
+  const secondary = highMatches.slice(1, 3);
+
+  // Mark featured applications with correct priority
+  if (main) {
+    main.priority = "featured-main";
+  }
+  secondary.forEach((app) => {
+    app.priority = "featured-side";
+  });
+
+  // Other applications (excluding featured)
+  const featuredIds = new Set([main, ...secondary].filter(Boolean).map((a) => a?.href));
+  const otherApplications = sorted.filter((app) => !featuredIds.has(app.href));
+
+  // Calculate average salary from applications with numeric values
+  const salaries = applications
+    .map((app) => app.compensation.amount || app.compensation.min || 0)
+    .filter((s) => s > 0);
+  const avgSalary =
+    salaries.length > 0
+      ? Math.round(salaries.reduce((a, b) => a + b, 0) / salaries.length)
+      : 0;
+
   return {
     metadata: {
-      issueNumber: 1,
-      date: new Date().toISOString().split("T")[0],
-      totalApplications: 8,
-      highPriorityCount: 3,
-      averageSalary: "$145K",
+      issueNumber: 1, // Could be calculated based on date
+      date: targetDate,
+      totalApplications: applications.length,
+      highPriorityCount: highMatches.length,
+      averageSalary: avgSalary > 0 ? `$${Math.round(avgSalary / 1000)}K` : "N/A",
     },
     featuredApplications: {
-      main: {
-        position: "Senior Creative Developer",
-        company: "Starlight Studios",
-        location: "San Francisco (Remote)",
-        compensation: {
-          type: "range",
-          currency: "USD",
-          min: 160000,
-          max: 190000,
-          displayValue: "$160k - $190k",
-        },
-        matchPercentage: 95,
-        matchLevel: "high",
-        description:
-          "Ideally seeking a specialist in WebGL and React. The role involves building immersive marketing experiences for Tier-1 tech clients.",
-        whyItFits:
-          "Perfect alignment with scroll-driven animation portfolio and recent Three.js experiments.",
-        status: "Cover letter drafted.",
-        priority: "featured-main",
-        href: "https://jobs.starlightstudios.com/senior-creative-dev",
-        resumeId: "resume_creative_2026_v3",
-      },
-      secondary: [
-        {
-          position: "Full Stack Engineer",
-          company: "FinTech Corp",
-          location: "New York",
-          compensation: {
-            type: "salary",
-            currency: "USD",
-            amount: 150000,
-            displayValue: "$150k",
-          },
-          matchPercentage: 90,
-          matchLevel: "high",
-          description:
-            "Heavy focus on Node.js backend pipelines and real-time data visualization. Requires strong Python knowledge for legacy integrations.",
-          priority: "featured-side",
-          href: "https://fintechcorp.com/careers/fullstack-engineer",
-          resumeId: "resume_fullstack_2026_v2",
-        },
-      ],
+      main,
+      secondary,
     },
-    otherApplications: [
-      {
-        position: "React Developer",
-        company: "Agency X",
-        location: "Remote",
-        compensation: {
-          type: "salary",
-          currency: "USD",
-          amount: 120000,
-          displayValue: "$120k",
-        },
-        description: "Standard e-commerce build.",
-        priority: "standard",
-        href: "https://agencyx.com/jobs/react-dev",
-        resumeId: "resume_frontend_2026_v1",
-      },
-    ],
+    otherApplications,
   };
 }
 
 /**
  * Get heatmap calendar data for all job applications.
- * TODO: Replace with Google Sheets integration
+ * @param startDate - Optional start date (ISO string). Defaults to 3 months ago.
+ * @param endDate - Optional end date (ISO string). Defaults to today.
  */
-export async function getHeatmapData(): Promise<HeatmapCalendarResponse> {
-  // Placeholder data - replace with Google Sheets API call
-  const today = new Date();
-  const startDate = new Date(today);
-  startDate.setMonth(startDate.getMonth() - 3);
+export async function getHeatmapData(
+  startDate?: string,
+  endDate?: string
+): Promise<HeatmapCalendarResponse> {
+  const allApplications = await getAllApplications();
 
-  const data = [];
-  let totalApplications = 0;
+  // Default date range: last 3 months
+  const end = endDate ? new Date(endDate) : new Date();
+  const start = startDate
+    ? new Date(startDate)
+    : new Date(end.getFullYear(), end.getMonth() - 3, end.getDate());
 
-  // Generate placeholder data for the last 3 months
-  const current = new Date(startDate);
-  while (current <= today) {
-    // Random count between 0-5 for demo purposes
-    const count = Math.floor(Math.random() * 6);
-    if (count > 0) {
-      data.push({
-        date: current.toISOString().split("T")[0],
-        count,
-      });
-      totalApplications += count;
+  const startStr = toISODateString(start);
+  const endStr = toISODateString(end);
+
+  // Count applications by date
+  const countsByDate = new Map<string, number>();
+
+  allApplications.forEach((item) => {
+    if (!item.appliedAt) return;
+    const dateStr = toISODateString(item.appliedAt);
+    if (dateStr >= startStr && dateStr <= endStr) {
+      countsByDate.set(dateStr, (countsByDate.get(dateStr) ?? 0) + 1);
     }
-    current.setDate(current.getDate() + 1);
-  }
+  });
+
+  // Convert to array of HeatmapDataPoint
+  const data: HeatmapDataPoint[] = Array.from(countsByDate.entries())
+    .map(([date, count]) => ({ date, count }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  const totalApplications = data.reduce((sum, d) => sum + d.count, 0);
 
   return {
     data,
-    startDate: startDate.toISOString().split("T")[0],
-    endDate: today.toISOString().split("T")[0],
+    startDate: startStr,
+    endDate: endStr,
     totalApplications,
   };
 }
