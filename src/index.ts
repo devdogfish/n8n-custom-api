@@ -3,6 +3,7 @@ import { config } from "dotenv";
 config({ path: ".env.local" });
 
 import express from "express";
+import cors from "cors";
 import session from "express-session";
 
 // Import types for session augmentation
@@ -19,6 +20,18 @@ import authRoutes from "./routes/auth.js";
 import jobReportRoutes from "./routes/job-report.js";
 
 const app = express();
+
+// Trust proxy (Vercel) - required for secure cookies behind reverse proxy
+app.set("trust proxy", 1);
+
+// CORS configuration - must be before other middleware
+app.use(
+  cors({
+    origin: "https://jobs.luigigirke.com",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 // Session configuration
@@ -42,7 +55,9 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      domain:
+        process.env.NODE_ENV === "production" ? ".luigigirke.com" : undefined,
       maxAge: SESSION_MAX_AGE_HOURS * 60 * 60 * 1000,
     },
   })
