@@ -25,9 +25,21 @@ const app = express();
 app.set("trust proxy", 1);
 
 // CORS configuration - must be before other middleware
+const allowedOrigins =
+  process.env.NODE_ENV === "production"
+    ? ["https://jobs.luigigirke.com"]
+    : ["http://localhost:5173", "http://localhost:3000"];
+
 app.use(
   cors({
-    origin: "https://jobs.luigigirke.com",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like curl or Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, origin);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
