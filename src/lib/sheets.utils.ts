@@ -1,7 +1,40 @@
 import { SHEET_ID, JOB_APPLICATIONS_SHEET, SHEET_NAMES } from "./constants.js";
 
+// Halifax timezone identifier
+const HALIFAX_TIMEZONE = "America/Halifax";
+
 export interface SheetRow {
   [key: string]: string | number | boolean | null;
+}
+
+/**
+ * Validates an ISO date string (YYYY-MM-DD format).
+ * @returns true if valid, false otherwise
+ */
+export function isValidISODateString(dateStr: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return false;
+  }
+  // Check if it's a valid date (e.g., 2024-02-30 is invalid)
+  const date = new Date(dateStr + "T00:00:00");
+  if (isNaN(date.getTime())) {
+    return false;
+  }
+  // Verify the parsed date matches the input (catches invalid dates like Feb 30)
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() + 1 === month &&
+    date.getDate() === day
+  );
+}
+
+/**
+ * Converts a Date to ISO date string (YYYY-MM-DD) in Halifax timezone.
+ * This ensures dates are compared in the user's local timezone rather than UTC.
+ */
+export function toHalifaxDateString(date: Date): string {
+  return date.toLocaleDateString("en-CA", { timeZone: HALIFAX_TIMEZONE });
 }
 
 export interface GoogleVisualizationResponse {

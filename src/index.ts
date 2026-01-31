@@ -17,7 +17,7 @@ import healthRoutes from "./routes/health.js";
 import resumeRoutes from "./routes/resume.js";
 import transcribeRoutes from "./routes/transcribe.js";
 import authRoutes from "./routes/auth.js";
-import jobReportRoutes from "./routes/job-report.js";
+import jobsRoutes from "./routes/jobs.js";
 
 const app = express();
 
@@ -80,7 +80,7 @@ app.use(healthRoutes);
 app.use(authRoutes);
 app.use(resumeRoutes);
 app.use(transcribeRoutes);
-app.use(jobReportRoutes);
+app.use(jobsRoutes);
 
 app.listen(3000, () => console.log("Resume API running on port 3000"));
 
