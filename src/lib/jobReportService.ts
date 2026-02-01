@@ -59,13 +59,10 @@ function rowToApplication(row: SheetRow, appliedAt: Date | null): Application {
     ? "range"
     : "salary";
 
-  // Generate a unique ID from company + role + date
   const role = (row.title as string) || "Unknown Position";
   const company = (row.companyName as string) || "Unknown Company";
   const dateStr = appliedAt ? toHalifaxDateString(appliedAt) : "unknown";
-  const id = `${company}-${role}-${dateStr}`
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-");
+  const id = (row.id as string) || "";
 
   // Determine eligible based on "sent" column
   // TRUE -> true, FALSE -> false, empty/undefined -> undefined
