@@ -20,4 +20,6 @@ export interface Application {
   status: string; // "Drafted" or "Rejected" or "Interview pending"
   tags: string[]; // ["React", "WebGL", "Three.js"]
   eligible?: boolean; // true if sent=TRUE, false if sent=FALSE, undefined if sent is empty
+  latitude?: number; // Geographic latitude coordinate
+  longitude?: number; // Geographic longitude coordinate
 }

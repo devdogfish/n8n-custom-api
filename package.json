@@ -20,6 +20,7 @@
     "multer": "^2.0.2",
     "ogg-opus-decoder": "^1.7.3",
     "pdfkit": "^0.17.2",
+    "react-map-gl": "^8.1.0",
     "vercel": "^50.9.6"
   },
   "devDependencies": {

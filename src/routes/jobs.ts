@@ -17,7 +17,7 @@ router.get(
   requireSession,
   async (
     req: Request<object, object, object, { date?: string }>,
-    res: Response<JobsResponse | AuthErrorResponse>
+    res: Response<JobsResponse | AuthErrorResponse>,
   ) => {
     try {
       const { date } = req.query;
@@ -33,12 +33,19 @@ router.get(
       }
 
       const applications = await getApplications(date);
-      return res.json({ applications });
+      return res.json({
+        applications: applications.map((app) => ({
+          ...app,
+          id: String(app.id),
+        })),
+      });
     } catch (error) {
       console.error("Error fetching job applications:", error);
-      return res.status(500).json({ error: "Failed to fetch job applications" });
+      return res
+        .status(500)
+        .json({ error: "Failed to fetch job applications" });
     }
-  }
+  },
 );
 
 export default router;

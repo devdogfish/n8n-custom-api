@@ -56,3 +56,6 @@ test.pdf
 
 # Misc
 .vercel
+
+# Claude Code
+.claude/

@@ -78,6 +78,11 @@ function rowToApplication(row: SheetRow, appliedAt: Date | null): Application {
   // If sent is empty/undefined, status should be "In Progress"
   const defaultStatus = eligible === undefined ? "In Progress" : "Applied";
 
+  // Parse latitude and longitude if available
+  const latitude = typeof row.latitude === "number" ? row.latitude : undefined;
+  const longitude =
+    typeof row.longitude === "number" ? row.longitude : undefined;
+
   return {
     id,
     company,
@@ -103,6 +108,8 @@ function rowToApplication(row: SheetRow, appliedAt: Date | null): Application {
       ? (row.industries as string).split(",").map((t) => t.trim())
       : [],
     eligible,
+    latitude,
+    longitude,
   };
 }
 
