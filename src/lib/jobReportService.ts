@@ -116,9 +116,10 @@ function rowToApplication(row: SheetRow, appliedAt: Date | null): Application {
 /**
  * Get all job applications from Google Sheets.
  * @param date - Optional ISO date string (YYYY-MM-DD) to filter by. Uses Halifax timezone for comparison.
+ * @param sheetId - Optional sheet ID override (for demo mode)
  */
-export async function getApplications(date?: string): Promise<Application[]> {
-  const rows = await fetchSheetData();
+export async function getApplications(date?: string, sheetId?: string): Promise<Application[]> {
+  const rows = await fetchSheetData(undefined, sheetId);
 
   const applications = rows.map((row) => {
     const appliedAt = parseGoogleSheetsDate(row.appliedAt as string | null);

@@ -1,4 +1,5 @@
 export const SHEET_ID = process.env.SHEET_ID; // The ID is the long string after /d/
+export const DEMO_SHEET_ID = process.env.DEMO_SHEET_ID; // Demo sheet ID for x-demo-mode header
 
 export const WEEK_DAYS = [
   "sunday",

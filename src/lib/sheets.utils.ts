@@ -50,16 +50,19 @@ export interface GoogleVisualizationResponse {
 /**
  * Fetch data from a Google Sheet tab.
  * @param sheetName - The tab name (defaults to JOB_APPLICATIONS_SHEET)
+ * @param sheetId - Optional sheet ID override (for demo mode)
  * @returns Array of row objects with column labels as keys
  */
 export async function fetchSheetData(
-  sheetName: string = JOB_APPLICATIONS_SHEET
+  sheetName: string = JOB_APPLICATIONS_SHEET,
+  sheetId?: string
 ): Promise<SheetRow[]> {
-  if (!SHEET_ID) {
+  const effectiveSheetId = sheetId || SHEET_ID;
+  if (!effectiveSheetId) {
     throw new Error("SHEET_ID environment variable is not set");
   }
 
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${encodeURIComponent(sheetName)}`;
+  const url = `https://docs.google.com/spreadsheets/d/${effectiveSheetId}/gviz/tq?sheet=${encodeURIComponent(sheetName)}`;
 
   const response = await fetch(url);
   if (!response.ok) {

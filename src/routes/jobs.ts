@@ -4,6 +4,7 @@ import { getApplications } from "../lib/jobReportService.js";
 import type { Application } from "../types/application.js";
 import { AuthErrorResponse } from "../types/auth.js";
 import { isValidISODateString } from "../lib/sheets.utils.js";
+import { DEMO_SHEET_ID } from "../lib/constants.js";
 
 const router = Router();
 
@@ -32,7 +33,11 @@ router.get(
         }
       }
 
-      const applications = await getApplications(date);
+      // Check for demo mode header
+      const isDemoMode = req.get("x-demo-mode") === "true";
+      const sheetId = isDemoMode ? DEMO_SHEET_ID : undefined;
+
+      const applications = await getApplications(date, sheetId);
       return res.json({
         applications: applications.map((app) => ({
           ...app,

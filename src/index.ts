@@ -27,7 +27,7 @@ app.set("trust proxy", 1);
 // CORS configuration - must be before other middleware
 const allowedOrigins =
   process.env.NODE_ENV === "production"
-    ? ["https://jobs.luigigirke.com"]
+    ? ["https://jobs.luigigirke.com", "https://jobs-demo.luigigirke.com"]
     : ["http://localhost:5173", "http://localhost:3000"];
 
 app.use(

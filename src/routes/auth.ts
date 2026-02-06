@@ -10,6 +10,7 @@ import type {
 const router = Router();
 
 const PASSWORD_HASH = process.env.AUTH_PASSWORD_HASH;
+const DEMO_PASSWORD_HASH = process.env.DEMO_AUTH_PASSWORD_HASH;
 
 router.post(
   "/auth/login",
@@ -24,12 +25,20 @@ router.post(
         return res.status(400).json({ error: "Password is required" });
       }
 
-      if (!PASSWORD_HASH) {
-        console.error("AUTH_PASSWORD_HASH environment variable not set");
+      // Check for demo mode header and use appropriate password hash
+      const isDemoMode = req.get("x-demo-mode") === "true";
+      const hashToUse = isDemoMode ? DEMO_PASSWORD_HASH : PASSWORD_HASH;
+
+      if (!hashToUse) {
+        console.error(
+          isDemoMode
+            ? "DEMO_AUTH_PASSWORD_HASH environment variable not set"
+            : "AUTH_PASSWORD_HASH environment variable not set"
+        );
         return res.status(500).json({ error: "Server configuration error" });
       }
 
-      const isValid = await verifyPassword(password, PASSWORD_HASH);
+      const isValid = await verifyPassword(password, hashToUse);
 
       if (isValid) {
         req.session.authenticated = true;
