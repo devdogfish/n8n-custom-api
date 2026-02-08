@@ -204,7 +204,36 @@ export async function generateResumePDFBuffer(
       );
     }
 
+    // LinkedIn link (format: /in/username)
+    const linkedinMatch = contact.match(/(\/in\/\w+)/);
+    if (linkedinMatch?.[1]) {
+      const linkedin = linkedinMatch[1];
+      const textWidth = doc.widthOfString(contact);
+      const linkedinStart = doc.widthOfString(
+        contact.substring(0, contact.indexOf(linkedin)),
+      );
+      const linkedinWidth = doc.widthOfString(linkedin);
+      const pageWidth = doc.page.width;
+      const centerOffset = (pageWidth - textWidth) / 2;
+      const startX = centerOffset + linkedinStart;
+
+      // Draw external link icon after LinkedIn text
+      const linkedinIconX = centerOffset + linkedinStart + linkedinWidth + iconPadding;
+      const linkedinIconY = contactY + 3;
+      drawExternalLinkIcon(doc, linkedinIconX, linkedinIconY, iconSize);
+
+      // Include the external link icon in the clickable area
+      doc.link(
+        startX,
+        contactY,
+        linkedinWidth + iconPadding + iconSize,
+        12,
+        `https://www.linkedin.com${linkedin}`,
+      );
+    }
+
     // Summary Section
+    doc.moveDown();
     renderSectionTitle(doc, "SUMMARY", fontBold, lineStart, lineEnd);
     doc.fontSize(10).font(fontRegular).text(data.summary).moveDown();
 

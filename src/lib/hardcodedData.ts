@@ -6,10 +6,11 @@ export const HARDCODED_DATA = {
   name: "Luigi Girke",
 
   // Contact information - selected based on isInternship flag from AI
+  // Note: extra spaces after URLs to make room for external link icons
   contact: {
     internship:
-      "6385 South St., Halifax | +1 (902) 943-0714 | internship@luigigirke.com | https://luigigirke.com",
-    job: "6385 South St., Halifax | +1 (902) 943-0714 | job@luigigirke.com | https://luigigirke.com",
+      "6385 South St., Halifax | +1 (902) 943-0714 | internship@luigigirke.com | https://luigigirke.com      | /in/luigigirke",
+    job: "6385 South St., Halifax | +1 (902) 943-0714 | job@luigigirke.com | https://luigigirke.com      | /in/luigigirke",
   },
 
   // Experience entries - AI selects which to include, controls order, and fills role and bullets
