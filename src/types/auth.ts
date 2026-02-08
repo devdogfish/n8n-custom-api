@@ -13,6 +13,7 @@ declare module "express-session" {
 
 export interface LoginRequest {
   password: string;
+  demoMode?: boolean;
 }
 
 export interface LoginResponse {
