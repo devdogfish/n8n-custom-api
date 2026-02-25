@@ -16,6 +16,11 @@ export const HARDCODED_DATA = {
   // Experience entries - AI selects which to include, controls order, and fills role and bullets
   // Each experience has a unique ID that AI references
   experience: {
+    rbc: {
+      institution: "Royal Bank of Canada (RBC)",
+      location: "Bedford, NS, Canada",
+      dates: "Summer 2026",
+    },
     youngdriversacademy: {
       institution: "Young Drivers Academy (Freelance)",
       location: "Remote — Leiden, Netherlands",
@@ -25,11 +30,6 @@ export const HARDCODED_DATA = {
       institution: "Apollotec.pt",
       location: "Coimbra, Portugal",
       dates: "Summer 2025",
-    },
-    etpzp: {
-      institution: "ETPZP",
-      location: "Leiria, Portugal",
-      dates: "2024 - 2025",
     },
     "hope-media-house": {
       institution: "Hope Media House",
@@ -58,6 +58,12 @@ export const HARDCODED_DATA = {
       subtitle: "Real Estate Viewing Platform",
       dates: "2024",
       link: "https://sitings.ca/property/?available=true",
+    },
+    "baden-shopify": {
+      title: "Baden Sports",
+      subtitle: "Shopify E-Commerce Store",
+      dates: "Summer 2024",
+      link: "https://badensports.ca",
     },
     "workouts-tracker": {
       title: "Personal Workouts Tracker",

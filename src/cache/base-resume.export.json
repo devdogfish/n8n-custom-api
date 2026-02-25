@@ -17,6 +17,13 @@
   ],
   "experience": [
     {
+      "experienceId": "rbc",
+      "role": "Incoming Software Developer Intern",
+      "bullets": [
+        "Incoming summer 2026 intern at Royal Bank of Canada"
+      ]
+    },
+    {
       "experienceId": "youngdriversacademy",
       "role": "Software/Web Developer",
       "bullets": [
@@ -30,15 +37,6 @@
       "bullets": [
         "Built internal email template management tool using Express.js with custom React.js interface",
         "Integrated Zoho API to autofill authenticated employee personal information for email templates"
-      ]
-    },
-    {
-      "experienceId": "etpzp",
-      "role": "DevOps/Full-Stack Developer",
-      "bullets": [
-        "Designed and deployed school-wide emergency notification system for ETPZP high school",
-        "Managed full DevOps lifecycle from development through production deployment on local, self-hosted infrastructure",
-        "Integrated with the school's Active Directory server for authentication"
       ]
     },
     {

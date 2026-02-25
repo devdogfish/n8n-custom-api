@@ -1,68 +1,92 @@
 {
   "isInternship": false,
-  "summary": "Frontend Engineer (React Experience) with hands-on experience building React and Next.js applications using TypeScript, HTML5, CSS3 and the Node.js (Express) ecosystem. Experienced in Git-based workflows, Docker deployments, and integrating REST APIs and PostgreSQL for scalable frontend solutions.",
+  "summary": "Software Developer with hands-on experience building production web applications using React, Next.js, TypeScript, and Liquid. Proven track record developing Shopify themes, customer management platforms, and DevOps solutions across freelance and enterprise environments, with a passion for applying classroom learning to real-world products.",
   "skills": [
     {
       "label": "Languages",
-      "value": "TypeScript, JavaScript, HTML5, CSS3"
+      "value": "TypeScript, Liquid, Java, Python, PHP, SQL, HTML/CSS, Bash"
     },
     {
       "label": "Frameworks & Libraries",
-      "value": "React.js, Next.js, Express.js, Prisma, Kysely"
+      "value": "React.js, Next.js, Express.js, Prisma ORM, TailwindCSS, Shadcn UI, GSAP, Zod, React-PDF"
     },
     {
       "label": "Tools & Platforms",
-      "value": "Git, Docker, PostgreSQL, REST APIs"
+      "value": "Shopify, WordPress, Git, Docker, PostgreSQL, Linux, Nginx, Node.js, REST APIs, Google APIs & Cloud (maps, sheets, drive)"
+    },
+    {
+      "label": "Languages Spoken",
+      "value": "German (native), English (C2), Portuguese (B2)"
     }
   ],
   "experience": [
     {
-      "experienceId": "etpzp",
-      "role": "Frontend Engineer (React Experience) / DevOps/Full-Stack Developer",
+      "experienceId": "rbc",
+      "role": "Incoming Software Developer Intern",
       "bullets": [
-        "Did build a flash SMS notification system using Next.js and TypeScript with GatewayAPI and PostgreSQL",
-        "Did deploy a self-hosted production server using Docker on Linux and manage environment stability",
-        "Did integrate Windows Active Directory for school-wide authentication"
+        "Selected for competitive summer internship at one of Canada's largest financial institutions"
       ]
     },
     {
-      "experienceId": "apollotec",
-      "role": "Frontend Engineer (React Experience) / Frontend/WordPress/Shopify Developer",
+      "experienceId": "youngdriversacademy",
+      "role": "Full-Stack Developer (Freelance)",
       "bullets": [
-        "Did develop features for the Beautifi web app using React.js with PostgreSQL and Kysely",
-        "Did integrate PHP and JavaScript with WordPress Advanced Custom Fields (ACF) for Sitings.ca",
-        "Did contribute to Shopify theme development using Liquid"
+        "Lead developer for a customer management platform serving a Netherlands-based go-karting company",
+        "Worked directly with the client to scope requirements, plan features, and fine-tune the features",
+        "Maintained a growing codebase by establishing consistent patterns, modular architecture, and clear documentation"
       ]
     },
     {
       "experienceId": "hope-media-house",
-      "role": "Full-Stack Developer",
+      "role": "Frontend & Shopify Developer",
       "bullets": [
-        "Did build an internal email template management tool using Express.js with a custom React.js interface",
-        "Did integrate Zoho API to autofill employee personal information for email templates"
+        "Worked on Baden Sports Shopify Store, Sitings.ca custom WordPress integration, and DonChendo",
+        "Collaborated closely with designers, senior developers, and the marketing team during frequent meetings and presentations",
+        "Gained experience working across multiple projects simultaneously while adapting to different tech stacks and client needs"
+      ]
+    },
+    {
+      "experienceId": "apollotec",
+      "role": "Software Developer",
+      "bullets": [
+        "Built internal tooling for automating email template management for the entire company",
+        "Closely integrated Zoho APIs and a Node and React interface that allowed employees to save time customizing their email templates",
+        "Self-taught Python fundamentals and immediately applied them to deliver production features"
       ]
     }
   ],
   "projects": [
     {
+      "projectId": "baden-shopify",
+      "bullets": [
+        "Wrote a custom basketball personalization feature using Liquid for previewing custom designs on products before ordering",
+        "Migrated an outdated Shopify theme to a modern version, preserving existing customizations and improving maintainability",
+        "Implemented responsive storefront optimizations and ensured cross-browser compatibility"
+      ]
+    },
+    {
       "projectId": "yda-crm",
       "bullets": [
-        "Did develop a customer management and go-kart booking system using TypeScript, Next.js, and Prisma",
-        "Did implement customer data handling and session scheduling features using Next.js and TypeScript"
+        "Building a full-stack customer management system using TypeScript, Next.js, and Prisma with PostgreSQL for event registration and automated invoicing",
+        "Implemented email notifications with Resend, invoice generation with React-PDF, and cloud file storage via Google Drive API",
+        "Designed a relational database schema handling customers, events, sessions, and invoices with Prisma ORM migrations"
       ]
     },
     {
       "projectId": "etpzp-sms",
       "bullets": [
-        "Did build a flash SMS sending system using Next.js, TypeScript, and PostgreSQL",
-        "Did deploy the solution on a self-hosted Linux server using Docker"
+        "Developed a flash SMS notification system using Next.js, TypeScript, GatewayAPI, and PostgreSQL with message queuing and delivery tracking",
+        "Deployed on self-hosted infrastructure using Docker and Nginx on a Linux VM with Active Directory authentication",
+        "Built a centralized web interface for school staff to compose, schedule, and monitor bulk SMS communications",
+        "Authored an 80-page bilingual documentation PDF in English and Portuguese covering system architecture, usage guides, and maintenance procedures"
       ]
     },
     {
       "projectId": "sitings",
       "bullets": [
-        "Did build a real estate location analysis and site selection tool using PHP, JavaScript, and WordPress ACF",
-        "Did optimize the platform for performance and efficient filtering using JavaScript and ACF"
+        "Built a real estate site selection and finding tool using PHP and JavaScript with WordPress Advanced Custom Fields (ACF)",
+        "Integrated Google Maps JavaScript API with marker clustering for grouping nearby properties and clickable pins that display listing details",
+        "Implemented dynamic filtering with AJAX loading, loading animations, and bookmarkable URLs using vanilla JavaScript"
       ]
     }
   ]

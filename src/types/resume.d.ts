@@ -8,8 +8,8 @@ export interface MasterResume {
   }>;
   experience: Array<{
     experienceId:
+      | "rbc"
       | "apollotec"
-      | "etpzp"
       | "hope-media-house"
       | "youngdriversacademy";
     role: string; // AI-generated, will be bold
@@ -19,7 +19,7 @@ export interface MasterResume {
     bullets: string[]; // AI-generated
   }>;
   projects: Array<{
-    projectId: "yda-crm" | "sitings" | "etpzp-sms" | "workouts-tracker";
+    projectId: "yda-crm" | "sitings" | "etpzp-sms" | "baden-shopify" | "workouts-tracker";
     title: string; // Hardcoded, will be bold
     subtitle: string; // Hardcoded, will be italic
     dates: string; // Hardcoded, will be bold
